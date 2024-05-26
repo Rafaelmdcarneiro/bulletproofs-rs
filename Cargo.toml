@@ -1,0 +1,69 @@
+[package]
+name = "bulletproofs"
+# Before doing a release:
+# - update version field 
+# - update html_root_url
+# - ensure yoloproofs was disabled in an atomic (revertable) commit
+# - update CHANGELOG
+version = "2.0.0"
+authors = ["Cathie Yun <cathieyun@gmail.com>", 
+           "Henry de Valence <hdevalence@hdevalence.ca>",
+           "Oleg Andreev <oleganza@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/dalek-cryptography/bulletproofs"
+categories = ["cryptography"]
+keywords = ["cryptography", "crypto", "ristretto", "zero-knowledge", "bulletproofs"]
+description = "A pure-Rust implementation of Bulletproofs using Ristretto"
+edition = "2018"
+
+[dependencies]
+curve25519-dalek = { version = "2", default-features = false, features = ["u64_backend", "nightly", "serde", "alloc"] }
+subtle = { version = "2", default-features = false }
+sha3 = { version = "0.8", default-features = false }
+digest = { version = "0.8", default-features = false }
+rand_core = { version = "0.5", default-features = false, features = ["alloc"] }
+rand = { version = "0.7", default-features = false, optional = true }
+byteorder = { version = "1", default-features = false }
+serde = { version = "1", default-features = false, features = ["alloc"] }
+serde_derive = { version = "1", default-features = false }
+thiserror = { version = "1", optional = true }
+merlin = { version = "2", default-features = false }
+clear_on_drop = { version = "0.2", default-features = false, features = ["nightly"] }
+
+[dev-dependencies]
+hex = "0.3"
+criterion = "0.3"
+bincode = "1"
+rand_chacha = "0.2"
+
+[features]
+default = ["std", "avx2_backend"]
+avx2_backend = ["curve25519-dalek/avx2_backend"]
+# yoloproofs = []
+std = ["rand", "rand/std", "thiserror"]
+
+[[test]]
+name = "range_proof"
+
+[[test]]
+name = "r1cs"
+required-features = ["yoloproofs"]
+
+[[bench]]
+name = "range_proof"
+harness = false
+
+[[bench]]
+name = "generators"
+harness = false
+
+[[bench]]
+name = "r1cs"
+harness = false
+required-features = ["yoloproofs"]
+
+[[bench]]
+name = "linear_proof"
+harness = false
+
